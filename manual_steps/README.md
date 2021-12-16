@@ -1,9 +1,9 @@
 # Manual steps
 
-This document describes the manual steps for creating a webserver with autoscaling  behind a loadbalancer which you can then connect to over the internet. The webserver is in a private subnet
+This document describes the manual steps for creating a autoscaling group with webservers behind an application load balancer which you can then connect to over the internet. The webserver is in a private subnet
 
-See below diagram for how the setup is:
-
+See below diagram for how the setup is:  
+![](../diagram/diagram_vpc_asg.png)
 
 
 
@@ -49,7 +49,7 @@ See below diagram for how the setup is:
 - Create launch configuration
 ![](media/2021-12-15-15-16-13.png)  
 
-- 
+
 ![](media/2021-12-15-15-19-00.png)  
 ```
 #cloud-config
@@ -63,93 +63,32 @@ runcmd:
 ![](media/2021-12-15-15-33-35.png)  
 ![](media/2021-12-15-16-31-48.png)  
 
+- loadbalancer create a target group    
+![](media/2021-12-16-16-13-15.png)  
+![](media/2021-12-16-16-13-49.png)  
+![](media/2021-12-16-16-27-26.png)   
+
+- loadbalancer create a appplication load balancer    
+![](media/2021-12-16-16-14-52.png)  
+![](media/2021-12-16-16-15-41.png)  
+![](media/2021-12-16-16-15-55.png)  
+![](media/2021-12-16-16-16-13.png)  
+![](media/2021-12-16-16-16-31.png)  
+![](media/2021-12-16-16-17-05.png)  
+
+- Auto Scaling groups  
+![](media/2021-12-16-16-29-32.png)  
+![](media/2021-12-16-16-29-58.png)  
+![](media/2021-12-16-16-30-29.png)  
+![](media/2021-12-16-16-30-53.png)  
+![](media/2021-12-16-16-31-08.png)  
+![](media/2021-12-16-16-31-30.png)  
+![](media/2021-12-16-16-31-51.png)  
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- create an ec2 instance that install nginx software from the start  
-![](media/2021-12-08-14-21-49.png)      
-![](media/2021-12-08-14-22-07.png)    
-![](media/2021-12-08-14-24-34.png)    
-    - Use the following code to automatically install and start the nginx server
-```
-#cloud-config
-runcmd:
-  - apt-get install -y nginx
-  - systemctl enable --no-block nginx 
-  - systemctl start --no-block nginx 
-````
-![](media/2021-12-08-14-25-06.png)    
-![](media/2021-12-08-14-25-55.png)    
-![](media/2021-12-08-14-26-09.png)    
-
-![](media/2021-12-08-14-26-32.png)    
-![](media/2021-12-08-14-27-07.png)  
-- loadbalancer create a target group  
-![](media/2021-12-08-14-32-27.png)    
-![](media/2021-12-08-14-31-55.png)    
-![](media/2021-12-08-14-33-05.png)    
-- loadbalancer create a appplication load balancer  
-![](media/2021-12-08-14-29-33.png)    
-![](media/2021-12-08-14-30-02.png)    
-![](media/2021-12-08-14-30-26.png)    
-![](media/2021-12-08-14-30-47.png)    
-![](media/2021-12-08-14-33-33.png)    
 - loadbalancer generated a DNS name which you can use to connect to the application server  
 ![](media/2021-12-08-15-36-38.png)  
 [patrick-loadbalancer-1479571194.us-east-1.elb.amazonaws.com](patrick-loadbalancer-1479571194.us-east-1.elb.amazonaws.com)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-https://www.youtube.com/watch?v=4EOaAkY4pNE
