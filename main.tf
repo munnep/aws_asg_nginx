@@ -172,26 +172,26 @@ resource "aws_lb_target_group" "lb_target_group" {
 #   port             = 80
 # }
 
-# # application load balancer
-# resource "aws_lb" "lb_application" {
-#   name               = "${var.tag_prefix}-lb"
-#   internal           = false
-#   load_balancer_type = "application"
-#   security_groups    = [aws_security_group.web_server_sg.id]
-#   subnets            = [aws_subnet.public1.id, aws_subnet.public2.id]
+# application load balancer
+resource "aws_lb" "lb_application" {
+  name               = "${var.tag_prefix}-lb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.web_server_sg.id]
+  subnets            = [aws_subnet.public1.id, aws_subnet.public2.id]
 
-#   tags = {
-#     Environment = "${var.tag_prefix}-lb"
-#   }
-# }
+  tags = {
+    Environment = "${var.tag_prefix}-lb"
+  }
+}
 
-# resource "aws_lb_listener" "front_end" {
-#   load_balancer_arn = aws_lb.lb_application.arn
-#   port              = "80"
-#   protocol          = "HTTP"
+resource "aws_lb_listener" "front_end" {
+  load_balancer_arn = aws_lb.lb_application.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.lb_target_group.arn
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.lb_target_group.arn
+  }
+}
