@@ -199,11 +199,11 @@ resource "aws_lb_listener" "front_end" {
 
 resource "aws_autoscaling_group" "as_group" {
   name                      = "${var.tag_prefix}-asg"
-  max_size                  = 2
-  min_size                  = 1
+  max_size                  = var.asg_max_size
+  min_size                  = var.asg_min_size
   health_check_grace_period = 300
   health_check_type         = "ELB"
-  desired_capacity          = 2
+  desired_capacity          = var.asg_desired_capacity
   force_delete              = true
   launch_configuration      = aws_launch_configuration.as_conf.name
   vpc_zone_identifier       = [aws_subnet.private.id]

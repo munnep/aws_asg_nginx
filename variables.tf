@@ -15,3 +15,20 @@ variable "ami" {
   default     = "ami-0a49b025fffbbdac6"
   description = "Must be an Ubuntu image that is available in the region you choose"
 }
+
+
+variable "asg_min_size" {
+  default = 1
+  description = "Autoscaling group minimal size"
+}
+
+variable "asg_max_size" {
+  default = 2
+  description = "Autoscaling group maximal size"
+}
+
+variable "asg_desired_capacity" {
+  default = 2
+  description = "Autoscaling group running number of instances"
+}
+
