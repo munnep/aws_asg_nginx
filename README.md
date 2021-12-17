@@ -56,9 +56,9 @@ terraform plan
 ```
 terraform apply
 ```
-- Terraform output should create 20 resources and show you the public dns string you can use to connect to the webserver
+- Terraform output should create 18 resources and show you the public dns string you can use to connect to the webserver
 ```
-Apply complete! Resources: 20 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
 
 Outputs:
 
@@ -66,16 +66,61 @@ http_link = "http://patrick-lb-1524684924.eu-central-1.elb.amazonaws.com"
 ```
 - You should be able to connect to the http_link with your web browser and see the nginx default webpage
 
+## Test the auto scaling group 
+- currently you should see 1 instance under the Load Balancer Target group  
+![](media/2021-12-17-12-15-44.png)  
+- Adjust the variable ```asg_desired_capacity``` in the  ```variables.tf``` from 1 to 2  
+```
+variable "asg_desired_capacity" {
+  default     = 2
+  description = "Autoscaling group running number of instances"
+}
+```
+- Terraform plan
+```
+terraform plan
+```
+- Terraform apply
+```
+terraform apply
+```
+- This should make 1 change
+```
+ # aws_autoscaling_group.as_group will be updated in-place
+  ~ resource "aws_autoscaling_group" "as_group" {
+      ~ desired_capacity          = 1 -> 2
+        id                        = "patrick-asg"
+        name                      = "patrick-asg"
+        # (22 unchanged attributes hidden)
+
+
+        # (2 unchanged blocks hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+
+
+```
+- You should see 2 instances under the Load Balancer Target group  
+![](media/2021-12-17-12-18-59.png)  
+## Remove the environment
+- terraform destroy
+```
+terraform destroy
+```
+
+
 # done
 - [x] create VPC
-- [x] create 2 subnets, one for public network, one for private network
+- [x] create 3 subnets, one for public network, one for private network
 - [x] create internet gw and connect to public network with a route table
 - [x] create nat gateway, and connect to private network with a route table
 - [x] route table association with the subnets 
 - [x] security group for allowing port 80
-- [x] create ec2 instance without public ip, only private subnet
-- [x] create a LB (check Application Load Balancer or Network Load Balancer)
+- [x] create an Application Load Balancer
 - [x] publish a service over LB, ie nginx
+- [x] Auto scaling launch configuration
+- [x] Auto scaling group creating
 
 # to do
 
