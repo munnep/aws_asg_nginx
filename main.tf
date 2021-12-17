@@ -137,26 +137,6 @@ resource "aws_security_group" "web_server_sg" {
 
 
 
-data "cloudinit_config" "server_config" {
-  gzip          = true
-  base64_encode = true
-  part {
-    content_type = "text/cloud-config"
-    content      = file("${path.module}/scripts/webserver.yml")
-  }
-}
-
-resource "aws_launch_configuration" "as_conf" {
-  name_prefix     = "${var.tag_prefix}-lc"
-  image_id        = var.ami
-  instance_type   = "t2.micro"
-  security_groups = [aws_security_group.web_server_sg.id]
-  user_data       = data.cloudinit_config.server_config.rendered
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
 
 # loadbalancer Target Group
 resource "aws_lb_target_group" "lb_target_group" {
@@ -165,12 +145,6 @@ resource "aws_lb_target_group" "lb_target_group" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
 }
-
-# resource "aws_lb_target_group_attachment" "lb_target_group_attachment" {
-#   target_group_arn = aws_lb_target_group.lb_target_group.arn
-#   target_id        = aws_instance.web_server.id
-#   port             = 80
-# }
 
 # application load balancer
 resource "aws_lb" "lb_application" {
@@ -196,7 +170,30 @@ resource "aws_lb_listener" "front_end" {
   }
 }
 
+# Automatic Scaling group Launch configuration
+# file for the webserver configuration
+data "cloudinit_config" "server_config" {
+  gzip          = true
+  base64_encode = true
+  part {
+    content_type = "text/cloud-config"
+    content      = file("${path.module}/scripts/webserver.yml")
+  }
+}
 
+resource "aws_launch_configuration" "as_conf" {
+  name_prefix     = "${var.tag_prefix}-lc"
+  image_id        = var.ami
+  instance_type   = "t2.micro"
+  security_groups = [aws_security_group.web_server_sg.id]
+  user_data       = data.cloudinit_config.server_config.rendered
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Automatic Scaling group
 resource "aws_autoscaling_group" "as_group" {
   name                      = "${var.tag_prefix}-asg"
   max_size                  = var.asg_max_size
@@ -212,7 +209,7 @@ resource "aws_autoscaling_group" "as_group" {
 
   tag {
     key                 = "Name"
-    value               = "${var.tag_prefix}-webserver"
+    value               = "${var.tag_prefix}-webserver-asg"
     propagate_at_launch = true
   }
 
