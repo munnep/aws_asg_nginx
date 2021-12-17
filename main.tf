@@ -195,3 +195,29 @@ resource "aws_lb_listener" "front_end" {
     target_group_arn = aws_lb_target_group.lb_target_group.arn
   }
 }
+
+
+resource "aws_autoscaling_group" "as_group" {
+  name                      = "${var.tag_prefix}-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 2
+  force_delete              = true
+  launch_configuration      = aws_launch_configuration.as_conf.name
+  vpc_zone_identifier       = [aws_subnet.private.id]
+  target_group_arns         = [aws_lb_target_group.lb_target_group.id]
+
+
+  tag {
+    key                 = "Name"
+    value               = "${var.tag_prefix}-webserver"
+    propagate_at_launch = true
+  }
+
+  timeouts {
+    delete = "15m"
+  }
+
+}
