@@ -1,12 +1,12 @@
 # AWS Loadbalancer with an auto scaling group for nginx webservers
 
-In this repository you will deploy an auto scaling group with webserver EC2 behind an application load balancer with Terraform on AWS. 
+In this repository you will deploy an auto scaling group with a webserver EC2 behind an application load balancer with Terraform on AWS. 
 
 Steps involved are: 
 - Create a VPC with subnets, routing tables, internet gateway and nat gateway
 - Creating an auto scaling launch configuration with Ubuntu and Nginx installation script
 - Creating an auto scaling group for EC2 instances using a launch configuration
-- Creating a Security group that allows traffic over port 80 to the loadbalancer and auto scaling group instances
+- Creating a Security group that allows traffic over port 80 to the load balancer and auto scaling group instances
 - Create an application load balancer to forward http traffic to the auto scaling group instances in the private subnet
 
 Diagram of the environment:    
@@ -69,12 +69,9 @@ http_link = "http://patrick-lb-1524684924.eu-central-1.elb.amazonaws.com"
 ## Test the auto scaling group 
 - currently you should see 1 instance under the Load Balancer Target group  
 ![](media/2021-12-17-12-15-44.png)  
-- Adjust the variable ```asg_desired_capacity``` in the  ```variables.tf``` from 1 to 2  
+- create a file called ```variables.auto.tfvars``` with the following content
 ```
-variable "asg_desired_capacity" {
-  default     = 2
-  description = "Autoscaling group running number of instances"
-}
+asg_desired_capacity = 2
 ```
 - Terraform plan
 ```
