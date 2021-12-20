@@ -11,10 +11,13 @@ Steps involved are:
 
 Diagram of the environment:    
 Simple:  
-![](diagram/diagram_vpc_asg.png)    
+![](diagram/diagram_vpc_asg_simple.png)    
 
 Detailed:  
 ![](diagram/diagram_vpc_asg.png)    
+
+Wardley Map:
+![](diagram/wardley_map.png)    
 
 There is a short [README.md](manual_steps/README.md) on how to do all this manually without Terraform. This is just to give you a better idea on the steps involved. Please use this only if you do not want to use Terraform. 
 
